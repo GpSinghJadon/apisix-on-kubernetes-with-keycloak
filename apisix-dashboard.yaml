@@ -89,10 +89,11 @@ spec:
       protocol: TCP
       port: 80
       targetPort: http
+      nodePort: 31685
   selector:
     app.kubernetes.io/instance: apisix-dashboard
     app.kubernetes.io/name: apisix-dashboard
-  type: ClusterIP
+  type: NodePort
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -114,7 +115,7 @@ data:
           - apisix-etcd:2379
       log:
         error_log:
-          level: warn
+          level: debug
           file_path: /dev/stderr
         access_log:
           file_path: /dev/stdout

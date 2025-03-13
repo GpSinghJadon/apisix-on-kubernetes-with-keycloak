@@ -211,7 +211,7 @@ data:
     nginx_config:                     # config for render the template to
     genarate nginx.conf
       error_log: "/dev/stderr"
-      error_log_level: "warn"         # warn,error
+      error_log_level: "debug"         # warn,error
       worker_rlimit_nofile: 20480     # the number of files a worker process can open, should be larger than worker_connections
       event:
         worker_connections: 10620
@@ -301,10 +301,11 @@ spec:
       protocol: TCP
       port: 9180
       targetPort: 9180
+      nodePort: 31683
   selector:
     app.kubernetes.io/instance: apisix
     app.kubernetes.io/name: apisix
-  type: ClusterIP
+  type: NodePort
 ---
 kind: Service
 apiVersion: v1

@@ -1,16 +1,8 @@
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: auth-poc
-  labels:
-    environment: development
-    team: authentication
----
-apiVersion: v1
 kind: Secret
 metadata:
   name: env-secrets
-  namespace: auth-poc  # Keep the secret in api-poc for now
+    # Keep the secret in api-poc for now
 stringData:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
@@ -26,7 +18,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: postgres-init
-  namespace: auth-poc
+  
 data:
   init.sql: |
     CREATE USER keycloak WITH PASSWORD 'keycloak';
@@ -41,7 +33,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
-  namespace: auth-poc
+  
 spec:
   replicas: 1
   selector:
@@ -85,7 +77,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres
-  namespace: auth-poc
+  
 spec:
   ports:
     - port: 5432
@@ -97,7 +89,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-pvc
-  namespace: auth-poc
+  
 spec:
   accessModes: [ "ReadWriteOnce" ]
   resources:
@@ -109,7 +101,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: keycloak
-  namespace: auth-poc
+  
 spec:
   replicas: 1
   selector:
@@ -185,7 +177,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: keycloak-service
-  namespace: auth-poc
+  
 spec:
   type: NodePort
   ports:

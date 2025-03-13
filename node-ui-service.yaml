@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: node-ui-service-config
+data:
+  PORT: "3000"
+  KEYCLOAK_BASE_URL: "http://192.168.56.1:30081"
+  REALM: "tenant1"
+  CLIENT_ID: "apisix-client"
+  CLIENT_SECRET: "a92YOLLlmF7tI28ShwlV3BlZAWYIbjww"
+  CALLBACK_URL: "http://192.168.56.1:31687/callback"
+  UI_URL: "http://ui-service-app:31686/ui-service/"
+  BACKEND_URL: "http://restaurant-service:9000"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-ui-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-ui-service
+  template:
+    metadata:
+      labels:
+        app: node-ui-service
+    spec:
+      containers:
+        - name: node-ui-service
+          image: gpsingh9999/pocs:node-ui-service
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: node-ui-service-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-ui-service
+spec:
+  selector:
+    app: node-ui-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+      nodePort: 31687
+  type: NodePort
+---
